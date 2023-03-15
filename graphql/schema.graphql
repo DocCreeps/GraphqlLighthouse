@@ -1,0 +1,36 @@
+directive @all on FIELD_DEFINITION
+directive @eq on ARGUMENT_DEFINITION
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Indicates what fields are available at the top level of a query operation."
+type Query {
+    me: User
+    users: [User!]! @all
+    user(id: ID! @eq): User @find
+    posts: [Post!]! @all
+    post(id: ID!): Post
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+    posts: [Post!]!
+}
+
+type Post {
+    id: ID!
+    title: String!
+    content: String!
+    author: User!
+    comments: [Comment!]!
+}
+
+type Comment {
+    id: ID!
+    reply: String!
+    post: Post!
+}
